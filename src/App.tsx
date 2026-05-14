@@ -173,7 +173,7 @@ const NavItem = ({ icon, label, active, onClick }: { icon: any, label: string, a
   </button>
 );
 
-const TopNav = ({ showBack, onBack }: { showBack?: boolean, onBack?: () => void }) => (
+const TopNav = ({ showBack, onBack, theme, toggleTheme }: { showBack?: boolean, onBack?: () => void, theme: 'dark' | 'light', toggleTheme: () => void }) => (
   <header className="fixed top-0 left-0 right-0 h-16 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 flex justify-between items-center px-6 z-50">
     <div className="flex items-center gap-4">
       {showBack ? (
@@ -191,6 +191,12 @@ const TopNav = ({ showBack, onBack }: { showBack?: boolean, onBack?: () => void 
         <button className="text-on-surface-variant hover:text-primary font-display text-xs font-bold uppercase h-16 transition-colors">Luyện tập</button>
       </nav>
       <div className="flex items-center gap-4">
+        <button 
+          onClick={toggleTheme}
+          className="lg:hidden p-2 text-on-surface-variant hover:text-primary transition-colors bg-surface-container-high/50 rounded-full"
+        >
+          {theme === 'dark' ? <Lightbulb size={20} /> : <Zap size={20} />}
+        </button>
         <button className="text-on-surface-variant hover:text-primary transition-colors"><Bell size={20} /></button>
         <button className="text-on-surface-variant hover:text-primary transition-colors"><UserCircle size={20} /></button>
       </div>
@@ -353,7 +359,7 @@ const speak = (text: string) => {
   window.speechSynthesis.speak(utterance);
 };
 
-const FlashcardView = ({ words, onComplete }: { words: Word[], onComplete: (masteredIds: string[]) => void }) => {
+const FlashcardView = ({ words, onComplete, theme, toggleTheme }: { words: Word[], onComplete: (masteredIds: string[]) => void, theme: 'dark' | 'light', toggleTheme: () => void }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [masteredIds, setMasteredIds] = useState<string[]>([]);
@@ -382,8 +388,14 @@ const FlashcardView = ({ words, onComplete }: { words: Word[], onComplete: (mast
           <button onClick={() => onComplete(masteredIds)} className="p-2 hover:bg-surface-variant/30 rounded-full transition-colors text-on-surface-variant">
             <X size={20} />
           </button>
-          <span className="font-display text-xl font-bold text-primary tracking-tight">LUYỆN THẺ GHI NHỚ</span>
+          <span className="font-display text-xl font-bold text-primary tracking-tight uppercase">Luyện thẻ ghi nhớ</span>
         </div>
+        <button 
+          onClick={toggleTheme}
+          className="lg:hidden p-2 text-on-surface-variant hover:text-primary transition-colors bg-surface-container-high/50 rounded-full"
+        >
+          {theme === 'dark' ? <Lightbulb size={20} /> : <Zap size={20} />}
+        </button>
       </header>
 
       <div className="flex justify-between items-end mb-2 mt-8">
@@ -458,7 +470,7 @@ const FlashcardView = ({ words, onComplete }: { words: Word[], onComplete: (mast
 
 // --- View: Quiz (Fill in) ---
 
-const QuizView = ({ words, onComplete }: { words: Word[], onComplete: (masteredIds: string[]) => void }) => {
+const QuizView = ({ words, onComplete, theme, toggleTheme }: { words: Word[], onComplete: (masteredIds: string[]) => void, theme: 'dark' | 'light', toggleTheme: () => void }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [input, setInput] = useState('');
   const [isWrong, setIsWrong] = useState(false);
@@ -494,8 +506,14 @@ const QuizView = ({ words, onComplete }: { words: Word[], onComplete: (masteredI
           <button onClick={() => onComplete(masteredIds)} className="p-2 hover:bg-surface-variant/30 rounded-full transition-colors text-on-surface-variant">
             <X size={20} />
           </button>
-          <span className="font-display text-xl font-bold text-primary tracking-tight">LUYỆN VIẾT CHÍNH TẢ</span>
+          <span className="font-display text-xl font-bold text-primary tracking-tight uppercase">Luyện viết chính tả</span>
         </div>
+        <button 
+          onClick={toggleTheme}
+          className="lg:hidden p-2 text-on-surface-variant hover:text-primary transition-colors bg-surface-container-high/50 rounded-full"
+        >
+          {theme === 'dark' ? <Lightbulb size={20} /> : <Zap size={20} />}
+        </button>
       </header>
 
       <form onSubmit={handleSubmit} className={`w-full max-w-2xl space-y-8 md:space-y-12 text-center animate-in slide-in-from-bottom-8 duration-700 px-4 ${isWrong ? 'animate-shake' : ''}`}>
@@ -558,7 +576,7 @@ const QuizView = ({ words, onComplete }: { words: Word[], onComplete: (masteredI
 
 // --- View: Challenge (Multiple Choice) ---
 
-const ChallengeView = ({ words, onComplete }: { words: Word[], onComplete: (masteredIds: string[]) => void }) => {
+const ChallengeView = ({ words, onComplete, theme, toggleTheme }: { words: Word[], onComplete: (masteredIds: string[]) => void, theme: 'dark' | 'light', toggleTheme: () => void }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [timer, setTimer] = useState(10);
@@ -633,11 +651,19 @@ const ChallengeView = ({ words, onComplete }: { words: Word[], onComplete: (mast
           <button onClick={() => onComplete(masteredIds)} className="p-2 hover:bg-surface-variant/30 rounded-full transition-colors text-on-surface-variant">
             <X size={20} />
           </button>
-          <span className="font-display text-xl font-bold text-primary tracking-tight">THỬ THÁCH HÀNG NGÀY</span>
+          <span className="font-display text-xl font-bold text-primary tracking-tight uppercase">Thử thách hàng ngày</span>
         </div>
-        <div className="flex flex-col items-end">
-          <span className="font-display text-[10px] font-bold text-primary uppercase">Câu hỏi {currentIndex + 1}/{words.length}</span>
-          <span className="font-display text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Oxford 3000</span>
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={toggleTheme}
+            className="lg:hidden p-2 text-on-surface-variant hover:text-primary transition-colors bg-surface-container-high/50 rounded-full"
+          >
+            {theme === 'dark' ? <Lightbulb size={20} /> : <Zap size={20} />}
+          </button>
+          <div className="flex flex-col items-end">
+            <span className="font-display text-[10px] font-bold text-primary uppercase">Câu hỏi {currentIndex + 1}/{words.length}</span>
+            <span className="font-display text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Oxford 3000</span>
+          </div>
         </div>
       </header>
 
@@ -776,7 +802,7 @@ export default function App() {
 
   return (
     <div className={`min-h-screen bg-background text-on-surface font-sans selection:bg-primary/30 overflow-x-hidden ${theme}`}>
-      {view === 'dashboard' && <TopNav showBack={view !== 'dashboard'} onBack={handleBack} />}
+      {view === 'dashboard' && <TopNav showBack={view !== 'dashboard'} onBack={handleBack} theme={theme} toggleTheme={toggleTheme} />}
       {view === 'dashboard' && <Sidebar activeView={view} setView={setView} theme={theme} toggleTheme={toggleTheme} />}
       {view === 'dashboard' && <BottomNav activeView={view} setView={setView} />}
       
@@ -792,9 +818,9 @@ export default function App() {
               className="flex-grow flex flex-col"
             >
               {view === 'dashboard' && <DashboardView setView={setView} progress={progress} wordsOfTheDay={wordsOfTheDay} />}
-              {view === 'flashcards' && <FlashcardView words={sessionWords} onComplete={handleSessionComplete} />}
-              {view === 'quiz' && <QuizView words={sessionWords} onComplete={handleSessionComplete} />}
-              {view === 'challenge' && <ChallengeView words={sessionWords} onComplete={handleSessionComplete} />}
+              {view === 'flashcards' && <FlashcardView words={sessionWords} onComplete={handleSessionComplete} theme={theme} toggleTheme={toggleTheme} />}
+              {view === 'quiz' && <QuizView words={sessionWords} onComplete={handleSessionComplete} theme={theme} toggleTheme={toggleTheme} />}
+              {view === 'challenge' && <ChallengeView words={sessionWords} onComplete={handleSessionComplete} theme={theme} toggleTheme={toggleTheme} />}
             </motion.div>
           </AnimatePresence>
         </div>
